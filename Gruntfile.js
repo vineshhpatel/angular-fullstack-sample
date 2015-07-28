@@ -3,6 +3,7 @@
 
 module.exports = function (grunt) {
   var localConfig;
+  var currentTarget;
   try {
     localConfig = require('./server/config/local.env');
   } catch(e) {
@@ -263,6 +264,11 @@ module.exports = function (grunt) {
             }
           }
         }
+      },
+      admin_dist: {
+        src: '<%= yeoman.admin %>/admin.html',
+        cwd: '<%= yeoman.admin %>',
+        exclude: [/bootstrap-sass-official/, /bootstrap.js/, '/json3/', '/es5-shim/', /bootstrap.css/, /font-awesome.css/ ],
       }
     },
 
@@ -579,7 +585,12 @@ module.exports = function (grunt) {
         options: {
           transform: function(filePath) {
             filePath = filePath.replace('/client/', '');
-            filePath = filePath.replace('/admin/', 'admin/');
+            console.log('currentTarget injector: ',currentTarget);
+            if(currentTarget == 'dist') {
+              filePath = filePath.replace('/admin/', '');
+            } else {
+              filePath = filePath.replace('/admin/', 'admin/');
+            }
             filePath = filePath.replace('/.tmp/', '');
             return '<script src="' + filePath + '"></script>';
           },
@@ -657,6 +668,36 @@ module.exports = function (grunt) {
         }
       }
     },
+    replace: {
+      dist: {
+        options: {
+          patterns: [
+            {
+              match: '<script src="admin/app/app.js"></script>',
+              replacement: '<script src="app/app.js"></script>'
+            }
+          ],
+          usePrefix: false
+        },
+        files: [
+          {expand: true, flatten: true, src: ['admin/admin.html'], dest: 'admin/'}
+        ]
+      },
+      normal: {
+        options: {
+          patterns: [
+            {
+              match: '<script src="app/app.js"></script>',
+              replacement: '<script src="admin/app/app.js"></script>'
+            }
+          ],
+          usePrefix: false
+        },
+        files: [
+          {expand: true, flatten: true, src: ['admin/admin.html'], dest: 'admin/'}
+        ]
+      }
+    }
   });
 
   // Used for delaying livereload until after server has restarted
@@ -676,6 +717,7 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('serve', function (target) {
+    currentTarget = target;
     if (target === 'dist') {
       return grunt.task.run(['build', 'env:all', 'env:prod', 'express:prod', 'wait', 'open', 'express-keepalive']);
     }
@@ -686,8 +728,10 @@ module.exports = function (grunt) {
         'env:all',
         'injector:sass', 
         'concurrent:server',
+        'replace:normal',
         'injector',
-        'wiredep',
+        'wiredep:target',
+        'wiredep:admin',
         'autoprefixer',
         'concurrent:debug'
       ]);
@@ -698,8 +742,10 @@ module.exports = function (grunt) {
       'env:all',
       'injector:sass', 
       'concurrent:server',
+      'replace:normal',
       'injector',
-      'wiredep',
+      'wiredep:target',
+      'wiredep:admin',
       'autoprefixer',
       'express:dev',
       'wait',
@@ -714,6 +760,7 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('test', function(target) {
+    currentTarget = target;
     if (target === 'server') {
       return grunt.task.run([
         'env:all',
@@ -728,6 +775,7 @@ module.exports = function (grunt) {
         'env:all',
         'injector:sass', 
         'concurrent:test',
+        'replace:normal',
         'injector',
         'autoprefixer',
         'karma'
@@ -741,6 +789,7 @@ module.exports = function (grunt) {
         'env:test',
         'injector:sass', 
         'concurrent:test',
+        'replace:normal',
         'injector',
         'wiredep',
         'autoprefixer',
@@ -755,24 +804,30 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('build', [
-    'clean:dist',
-    'injector:sass', 
-    'concurrent:dist',
-    'injector',
-    'wiredep',
-    'useminPrepare',
-    'autoprefixer',
-    'ngtemplates',
-    'concat',
-    // 'ngAnnotate',
-    // 'copy:dist',
-    // 'cdnify',
-    // 'cssmin',
-    // 'uglify',
-    // 'rev',
-    // 'usemin'
-  ]);
+  grunt.registerTask('build', function() {
+    currentTarget = 'dist';
+    console.log('currentTarget',currentTarget);
+    return grunt.task.run([
+      'clean:dist',
+      'injector:sass', 
+      'concurrent:dist',
+      'injector',
+      'wiredep:target',
+      'replace:dist',
+      'wiredep:admin_dist',
+      'useminPrepare',
+      'autoprefixer',
+      'ngtemplates',
+      'concat',
+      'ngAnnotate',
+      // 'copy:dist',
+      // 'cdnify',
+      // 'cssmin',
+      // 'uglify',
+      // 'rev',
+      // 'usemin'
+    ]);
+  });
 
   grunt.registerTask('default', [
     'newer:jshint',
