@@ -280,7 +280,9 @@ module.exports = function (grunt) {
             '<%= yeoman.dist %>/public/{,*/}*.js',
             '<%= yeoman.dist %>/public/{,*/}*.css',
             '<%= yeoman.dist %>/public/assets/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-            '<%= yeoman.dist %>/public/assets/fonts/*'
+            '<%= yeoman.dist %>/public/assets/fonts/*',
+            '!**/Chart.js/**',
+            '!**/angular-chart.js/**'
           ]
         }
       }
@@ -300,7 +302,10 @@ module.exports = function (grunt) {
     usemin: {
       html: ['<%= yeoman.dist %>/public/{,*/}*.html'],
       css: ['<%= yeoman.dist %>/public/{,*/}*.css'],
-      js: ['<%= yeoman.dist %>/public/{,*/}*.js'],
+      js: [
+          '<%= yeoman.dist %>/public/{,*/}*.js',
+          '!<%= yeoman.dist %>/public/bower_components/{Chart.js,angular-chart.js}',
+          ],
       options: {
         assetsDirs: [
           '<%= yeoman.dist %>/public',
@@ -378,16 +383,16 @@ module.exports = function (grunt) {
           },
           usemin: 'app/app.js'
         },
-        main: {
+        // main: {
           cwd: '<%= yeoman.client %>',
           src: ['{app,components}/**/*.html'],
           dest: '.tmp/templates.js'
-        },
-        tmp: {
-          cwd: '.tmp',
-          src: ['{app,components}/**/*.html'],
-          dest: '.tmp/tmp-templates.js'
-        }
+        // },
+        // tmp: {
+        //   cwd: '.tmp',
+        //   src: ['{app,components}/**/*.html'],
+        //   dest: '.tmp/tmp-templates.js'
+        // }
       },
       admin: {
         options: {
@@ -402,25 +407,28 @@ module.exports = function (grunt) {
             removeScriptTypeAttributes: true,
             removeStyleLinkTypeAttributes: true
           },
-          usemin: 'app/app.js'
+          url: function(url) { 
+            return 'admin/' + url; 
+          },
+          usemin: 'app/admin-app.js'
         },
-        main: {
+        // main: {
           cwd: '<%= yeoman.admin %>',
           src: ['{app,components}/**/*.html'],
           dest: '.tmp/admin-templates.js'
-        },
-        tmp: {
-          cwd: '.tmp',
-          src: ['{app,components}/**/*.html'],
-          dest: '.tmp/admin-tmp-templates.js'
-        }
+        // },
+        // tmp: {
+        //   cwd: '.tmp',
+        //   src: ['{app,components}/**/*.html'],
+        //   dest: '.tmp/admin-tmp-templates.js'
+        // }
       }
     },
 
     // Replace Google CDN references
     cdnify: {
       dist: {
-        html: ['<%= yeoman.dist %>/public/*.html']
+        html: ['<%= yeoman.dist %>/public/*.html', '<%= yeoman.dist %>/public/admin/*.html']
       }
     },
 
@@ -439,6 +447,19 @@ module.exports = function (grunt) {
             'assets/images/{,*/}*.{webp}',
             'assets/fonts/**/*',
             'index.html'
+          ]
+        }, {
+          expand: true,
+          dot: true,
+          cwd: '<%= yeoman.admin %>',
+          dest: '<%= yeoman.dist %>/public/admin',
+          src: [
+            '*.{ico,png,txt}',
+            '.htaccess',
+            'bower_components/**/*',
+            'assets/images/{,*/}*.{webp}',
+            'assets/fonts/**/*',
+            'admin.html'
           ]
         }, {
           expand: true,
@@ -820,12 +841,12 @@ module.exports = function (grunt) {
       'ngtemplates',
       'concat',
       'ngAnnotate',
-      // 'copy:dist',
-      // 'cdnify',
-      // 'cssmin',
-      // 'uglify',
+      'copy:dist',
+      'cdnify',
+      'cssmin',
+      'uglify',
       // 'rev',
-      // 'usemin'
+      'usemin'
     ]);
   });
 
