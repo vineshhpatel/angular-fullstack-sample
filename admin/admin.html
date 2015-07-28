@@ -11,11 +11,15 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css(admin) app/vendor.css -->
+    <!-- build:css({admin}) admin/app/admin-vendor.css -->
       <!-- bower:css -->
+      <link rel="stylesheet" href="admin/bower_components/angular-loading-bar/build/loading-bar.css" />
+      <link rel="stylesheet" href="admin/bower_components/angular-toggle-switch/angular-toggle-switch.css" />
+      <link rel="stylesheet" href="admin/bower_components/metisMenu/dist/metisMenu.css" />
+      <link rel="stylesheet" href="admin/bower_components/angular-chart.js/dist/angular-chart.css" />
       <!-- endbower -->
     <!-- endbuild -->
-    <!-- build:css({.tmp,admin}) app/app.css -->
+    <!-- build:css({.tmp,admin}) admin/app/admin-app.css -->
     <link rel="stylesheet" href="app/admin-app.css">
       <!-- injector:css -->
       <!-- endinjector -->
@@ -44,22 +48,29 @@
     <script src="admin/bower_components/es5-shim/es5-shim.js"></script>
     <script src="admin/bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
-    <!-- build:js({admin,node_modules}) app/vendor.js -->
+    <!-- build:js({admin,node_modules}) admin/app/admin-vendor.js -->
       <!-- bower:js -->
       <script src="admin/bower_components/jquery/dist/jquery.js"></script>
       <script src="admin/bower_components/angular/angular.js"></script>
-      <script src="admin/bower_components/angular-resource/angular-resource.js"></script>
       <script src="admin/bower_components/angular-cookies/angular-cookies.js"></script>
       <script src="admin/bower_components/angular-sanitize/angular-sanitize.js"></script>
+      <script src="admin/bower_components/angular-animate/angular-animate.js"></script>
+      <script src="admin/bower_components/angular-touch/angular-touch.js"></script>
       <script src="admin/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-      <script src="admin/bower_components/lodash/dist/lodash.compat.js"></script>
-      <script src="admin/bower_components/angular-socket-io/socket.js"></script>
+      <script src="admin/bower_components/oclazyload/dist/ocLazyLoad.js"></script>
+      <script src="admin/bower_components/angular-loading-bar/build/loading-bar.js"></script>
       <script src="admin/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+      <script src="admin/bower_components/angular-toggle-switch/angular-toggle-switch.js"></script>
+      <script src="admin/bower_components/metisMenu/dist/metisMenu.js"></script>
+      <script src="admin/bower_components/Chart.js/Chart.js"></script>
+      <script src="admin/bower_components/angular-chart.js/dist/angular-chart.js"></script>
+      <script src="admin/bower_components/angular-resource/angular-resource.js"></script>
+      <script src="admin/bower_components/angular-socket-io/socket.js"></script>
       <!-- endbower -->
       <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
 
-        <!-- build:js({.tmp,admin}) app/app.js -->
+        <!-- build:js({.tmp,admin}) admin/app/admin-app.js -->
         
         <script src="admin/app/app.js"></script>
           <!-- injector:js -->

@@ -21,8 +21,8 @@ module.exports = function(app) {
 
   app.route('/admin')
     .get(function(req, res) {
-      console.log('serving admin index.html');
-      res.sendFile(path.resolve(app.get('adminAppPath') + '/index.html'));
+      console.log('serving admin admin.html');
+      res.sendFile(path.resolve(app.get('adminAppPath') + '/admin.html'));
     });
 
   // All other routes should redirect to the index.html
